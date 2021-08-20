@@ -22,7 +22,6 @@ sns.distplot(data_train['SalePrice'])
 print("Skewness: %f" % data_train['SalePrice'].skew())
 print("Kurtosis: %f" % data_train['SalePrice'].kurt())
 
-#类别型特征
 
 # CentralAir
 var = 'CentralAir'
@@ -61,8 +60,6 @@ fig.axis(ymin=0, ymax=800000);
 #plt.show()
 
 
-#数值型特征
-
 #LotArea
 var  = 'LotArea'
 data = pd.concat([data_train['SalePrice'], data_train[var]], axis=1)
@@ -94,7 +91,6 @@ for index in range(2):
     data.plot.scatter(x=var[index], y='SalePrice', ylim=(0, 800000))
 #plt.show()
 
-#关系矩阵
 corrmat = data_train.corr()
 f, ax = plt.subplots(figsize=(20, 9))
 sns.heatmap(corrmat, vmax=0.8, square=True)
@@ -110,8 +106,8 @@ f, ax = plt.subplots(figsize=(20, 9))
 sns.heatmap(corrmat, vmax=0.8, square=True)
 #plt.show()
 
-#房价关系矩阵
-k  = 10 # 关系矩阵中将显示10个特征
+
+k  = 10 
 cols = corrmat.nlargest(k, 'SalePrice')['SalePrice'].index
 cm = np.corrcoef(data_train[cols].values.T)
 sns.set(font_scale=1.25)
@@ -119,13 +115,13 @@ hm = sns.heatmap(cm, cbar=True, annot=True, \
                  square=True, fmt='.2f', annot_kws={'size': 10}, yticklabels=cols.values, xticklabels=cols.values)
 #plt.show()
 
-#绘制关系点图
+
 sns.set()
 cols = ['SalePrice','OverallQual','GrLivArea', 'GarageCars','TotalBsmtSF', 'FullBath', 'TotRmsAbvGrd', 'YearBuilt']
 sns.pairplot(data_train[cols], size = 2.5)
 #plt.show()
 
-#开始模拟数据
+
 from sklearn import preprocessing
 from sklearn import linear_model, svm, gaussian_process
 from sklearn.ensemble import RandomForestRegressor
@@ -133,7 +129,7 @@ from sklearn.cross_validation import train_test_split
 import numpy as np
 
 
-# 获取数据
+
 cols = ['OverallQual','GrLivArea', 'GarageCars','TotalBsmtSF', 'FullBath', 'TotRmsAbvGrd', 'YearBuilt']
 x = data_train[cols].values
 y = data_train['SalePrice'].values
@@ -155,7 +151,6 @@ for clf in clfs:
         print(clf + " Error:")
         print(str(e))
 
-#由上面结果选择随机森林回归算法
 
 cols = ['OverallQual','GrLivArea', 'GarageCars','TotalBsmtSF', 'FullBath', 'TotRmsAbvGrd', 'YearBuilt']
 x = data_train[cols].values
@@ -167,10 +162,7 @@ clf.fit(X_train, y_train)
 y_pred = clf.predict(X_test)
 print(y_pred)
 
-# 保存clf，共下面计算测试集数据使用
-# rfr = clf
 
-#检验测试集数据
 
 import pandas as pd
 from sklearn.ensemble import RandomForestRegressor
@@ -205,5 +197,4 @@ result = pd.concat([ data_test['Id'], prediction], axis=1)
 # result = result.drop(resultlt.columns[0], 1)
 print(result.columns)
 
-# 保存预测结果
 result.to_csv('c:/users/kevin/desktop/Predictions.csv', index=False)
